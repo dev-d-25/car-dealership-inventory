@@ -28,12 +28,20 @@ export async function authenticate(
   next();
 }
 
-export function requireAdmin(req: Request, _res: Response, next: NextFunction) {
-  const role = (req.user as { role?: string } | undefined)?.role;
+export function requirePermission(resource: string, action: string) {
+  return async (req: Request, _res: Response, next: NextFunction) => {
+    const result = await auth.api.userHasPermission({
+      body: {
+        userId: req.user!.id,
+        permissions: { [resource]: [action] },
+      },
+    });
 
-  if (role !== "admin") {
-    throw ApiError.forbidden("Admin access required");
-  }
+    if (result.success) {
+      next();
+      return;
+    }
 
-  next();
+    throw ApiError.forbidden("Insufficient permissions");
+  };
 }
