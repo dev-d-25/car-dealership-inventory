@@ -39,6 +39,8 @@ export const searchVehicleSchema = z.object({
   category: z.enum(vehicleCategoryEnum).optional(),
   minPrice: z.coerce.number().min(0).optional(),
   maxPrice: z.coerce.number().min(0).optional(),
+  sortBy: z.enum(["price", "createdAt", "updatedAt"]).optional(),
+  sortOrder: z.enum(["asc", "desc"]).optional(),
   page: z.coerce.number().int().min(1).default(1),
   limit: z.coerce.number().int().min(1).default(10),
 });

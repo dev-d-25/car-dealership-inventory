@@ -1,4 +1,14 @@
-import { and, count, eq, gte, ilike, lte, type SQL } from "drizzle-orm";
+import {
+  and,
+  asc,
+  count,
+  desc,
+  eq,
+  gte,
+  ilike,
+  lte,
+  type SQL,
+} from "drizzle-orm";
 import { db } from "../../db/index.js";
 import { vehicle } from "../../db/schema.js";
 import type {
@@ -9,16 +19,30 @@ import type {
 
 export type Vehicle = typeof vehicle.$inferSelect;
 
+function getOffset(page: number, limit: number): number {
+  return (page - 1) * limit;
+}
+
 function buildSearchConditions(filters: SearchVehicleInput): SQL[] {
-  return [
-    filters.maker && ilike(vehicle.maker, filters.maker),
-    filters.model && ilike(vehicle.model, filters.model),
-    filters.category && eq(vehicle.category, filters.category),
-    filters.minPrice !== undefined &&
-      gte(vehicle.price, filters.minPrice.toString()),
-    filters.maxPrice !== undefined &&
-      lte(vehicle.price, filters.maxPrice.toString()),
-  ].filter((c): c is SQL => Boolean(c));
+  const conditions: SQL[] = [];
+
+  if (filters.maker) {
+    conditions.push(ilike(vehicle.maker, `%${filters.maker}%`));
+  }
+  if (filters.model) {
+    conditions.push(ilike(vehicle.model, `%${filters.model}%`));
+  }
+  if (filters.category) {
+    conditions.push(eq(vehicle.category, filters.category));
+  }
+  if (filters.minPrice !== undefined) {
+    conditions.push(gte(vehicle.price, filters.minPrice.toString()));
+  }
+  if (filters.maxPrice !== undefined) {
+    conditions.push(lte(vehicle.price, filters.maxPrice.toString()));
+  }
+
+  return conditions;
 }
 
 export async function createVehicle(
@@ -55,7 +79,7 @@ export async function listVehicles(options: {
   limit: number;
 }): Promise<{ data: Vehicle[]; total: number }> {
   const { page, limit } = options;
-  const offset = (page - 1) * limit;
+  const offset = getOffset(page, limit);
 
   const data = await db.select().from(vehicle).limit(limit).offset(offset);
   const [{ total }] = await db.select({ total: count() }).from(vehicle);
@@ -66,15 +90,21 @@ export async function listVehicles(options: {
 export async function searchVehicles(
   filters: SearchVehicleInput,
 ): Promise<{ data: Vehicle[]; total: number }> {
-  const { page, limit } = filters;
-  const offset = (page - 1) * limit;
+  const { page, limit, sortBy, sortOrder } = filters;
+  const offset = getOffset(page, limit);
   const conditions = buildSearchConditions(filters);
   const where = conditions.length > 0 ? and(...conditions) : undefined;
+
+  const orderFn = sortOrder === "desc" ? desc : asc;
+  const orderColumn = sortBy === "price" ? vehicle.price
+    : sortBy === "updatedAt" ? vehicle.updatedAt
+    : vehicle.createdAt;
 
   const data = await db
     .select()
     .from(vehicle)
     .where(where)
+    .orderBy(orderFn(orderColumn))
     .limit(limit)
     .offset(offset);
 
