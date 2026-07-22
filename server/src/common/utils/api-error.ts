@@ -1,7 +1,6 @@
 import type { Response } from "express";
 
 type ApiErrorBody = {
-  message: string;
   error?: string;
   error_description?: string;
   errors?: unknown;
@@ -11,6 +10,7 @@ type ApiErrorBody = {
 export class ApiError extends Error {
   constructor(
     public statusCode: number,
+    public code: string,
     public message: string,
     public body?: Omit<ApiErrorBody, "message">,
   ) {
@@ -19,31 +19,31 @@ export class ApiError extends Error {
   }
 
   static badRequest(message: string): ApiError {
-    return new ApiError(400, message);
+    return new ApiError(400, "BAD_REQUEST", message);
   }
 
   static unauthorized(message: string): ApiError {
-    return new ApiError(401, message);
+    return new ApiError(401, "UNAUTHORIZED", message);
   }
 
   static notFound(message: string): ApiError {
-    return new ApiError(404, message);
+    return new ApiError(404, "NOT_FOUND", message);
   }
 
   static conflict(message: string): ApiError {
-    return new ApiError(409, message);
+    return new ApiError(409, "CONFLICT", message);
   }
 
   static forbidden(message: string): ApiError {
-    return new ApiError(403, message);
+    return new ApiError(403, "FORBIDDEN", message);
   }
 
   static internalServerError(message: string): ApiError {
-    return new ApiError(500, message);
+    return new ApiError(500, "INTERNAL_SERVER_ERROR", message);
   }
 
   static validation(message: string, errors?: unknown): ApiError {
-    return new ApiError(400, message, { errors });
+    return new ApiError(400, "VALIDATION_ERROR", message, { errors });
   }
 
   static oauth(
@@ -51,7 +51,7 @@ export class ApiError extends Error {
     error: string,
     error_description: string,
   ): ApiError {
-    return new ApiError(statusCode, error_description, {
+    return new ApiError(statusCode, error, error_description, {
       error,
       error_description,
     });
@@ -71,8 +71,12 @@ export class ApiError extends Error {
 
   send(res: Response): Response {
     return res.status(this.statusCode).json({
-      message: this.message,
-      ...this.body,
+      success: false,
+      error: {
+        code: this.code,
+        message: this.message,
+        ...this.body,
+      },
     });
   }
 }

@@ -1,20 +1,35 @@
 import type { Response } from "express";
 
+export interface Pagination {
+  currentPage: number;
+  total: number;
+  limit: number;
+  totalPages: number;
+}
+
 export class ApiResponse {
-  static json<T>(res: Response, data: T, statusCode = 200): Response {
-    return res.status(statusCode).json(data);
+  static success<T>(res: Response, data: T, statusCode = 200): Response {
+    return res.status(statusCode).json({
+      success: true,
+      data,
+    });
   }
 
-  static ok(res: Response, message: string, data?: unknown): Response {
-    return this.json(res, { message, data }, 200);
+  static paginated<T>(
+    res: Response,
+    data: T,
+    pagination: Pagination,
+    statusCode = 200,
+  ): Response {
+    return res.status(statusCode).json({
+      success: true,
+      data,
+      pagination,
+    });
   }
 
-  static created(res: Response, message: string, data?: unknown): Response {
-    return this.json(res, { message, data }, 201);
-  }
-
-  static redirect(res: Response, redirect: string): Response {
-    return this.json(res, { redirect }, 200);
+  static created<T>(res: Response, data: T): Response {
+    return this.success(res, data, 201);
   }
 
   static noContent(res: Response): Response {
