@@ -1,6 +1,6 @@
 import express, { type Express } from "express";
 import cors from "cors";
-import { authHandler } from "./modules/auth/index.js";
+import { authHandler, authRoutes } from "./modules/auth/index.js";
 
 const app: Express = express();
 
@@ -16,6 +16,7 @@ app.get("/api/v1/health", (_req, res) => {
 });
 
 app.all("/api/v1/auth/{*any}", authHandler);
+app.use("/api/v1/auth", authRoutes);
 
 app.use(express.json());
 
