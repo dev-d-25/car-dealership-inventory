@@ -1,1 +1,1 @@
-export { authHandler } from "./auth.handler";
+export { authHandler } from "./auth.handler.js";

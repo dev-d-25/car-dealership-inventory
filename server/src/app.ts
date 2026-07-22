@@ -1,14 +1,22 @@
 import express, { type Express } from "express";
 import cors from "cors";
-import { authHandler } from "./modules/auth";
+import { authHandler } from "./modules/auth/index.js";
 
 const app: Express = express();
-const apiV1 = express.Router();
 
-apiV1.all("/auth/{*any}", authHandler);
+app.use(
+  cors({
+    origin: "http://localhost:5173",
+    credentials: true,
+  }),
+);
 
-app.use(cors());
-app.use("/api/v1", apiV1);
+app.get("/api/v1/health", (_req, res) => {
+  res.json({ status: "ok" });
+});
+
+app.all("/api/v1/auth/{*any}", authHandler);
+
 app.use(express.json());
 
 export { app };

@@ -1,5 +1,7 @@
-import "dotenv/config";
-import { app } from "./app";
+import dotenv from "dotenv";
+import { app } from "./app.js";
+
+dotenv.config({ path: "../.env.local" });
 
 const port = process.env.PORT || 3000;
 
