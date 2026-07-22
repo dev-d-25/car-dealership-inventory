@@ -28,6 +28,11 @@ export const createVehicleSchema = z.object({
 
 export const updateVehicleSchema = createVehicleSchema.partial();
 
+export const listVehicleSchema = z.object({
+  page: z.coerce.number().int().min(1).default(1),
+  limit: z.coerce.number().int().min(1).default(10),
+});
+
 export const searchVehicleSchema = z.object({
   maker: z.string().optional(),
   model: z.string().optional(),
@@ -38,6 +43,12 @@ export const searchVehicleSchema = z.object({
   limit: z.coerce.number().int().min(1).default(10),
 });
 
+export const restockVehicleSchema = z.object({
+  amount: z.coerce.number().int().positive("Amount must be greater than 0"),
+});
+
 export type CreateVehicleInput = z.infer<typeof createVehicleSchema>;
 export type UpdateVehicleInput = z.infer<typeof updateVehicleSchema>;
+export type ListVehicleInput = z.infer<typeof listVehicleSchema>;
 export type SearchVehicleInput = z.infer<typeof searchVehicleSchema>;
+export type RestockVehicleInput = z.infer<typeof restockVehicleSchema>;
