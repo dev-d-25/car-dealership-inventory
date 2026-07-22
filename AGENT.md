@@ -1,0 +1,3 @@
+- use pnpm instead of npm
+- follow micro commit pattern for commit message follow the guide in PRD.md
+- also follow tdd and red green refactor method 

@@ -37,13 +37,13 @@ This kata project requires building a full-stack car dealership inventory system
 
 ### Testing
 - Vitest for backend unit tests (against real DB)
-- No strict TDD, but tests are required
+- TDD approach: RED → GREEN → REFACTOR
 - Frontend: manual testing
 
 ### Code Quality
 - ESLint + Prettier for linting and formatting
 - Winston for logging
-- Conventional commits: feat:, fix:, test:, refactor:, chore:
+- Conventional commits with TDD context: feat:, fix:, test:, refactor:, chore:
 
 ## Consequences
 

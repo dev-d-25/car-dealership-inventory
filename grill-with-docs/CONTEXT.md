@@ -10,12 +10,12 @@ A full-stack application for managing vehicle inventory with user authentication
 - **Image Hosting**: ImageKit + Multer
 - **Backend Hosting**: Railway
 - **Frontend Hosting**: Vercel
-- **Structure**: Monorepo
+- **Structure**: Separate server/ and client/ directories
 - **Testing**: Vitest (backend tests against real DB)
 - **Frontend Testing**: Manual
 - **Linting**: ESLint + Prettier
 - **Logging**: Winston
-- **Git**: Conventional commits (feat:, fix:, test:, refactor:, chore:)
+- **Git**: Conventional commits with TDD approach (RED → GREEN → REFACTOR in commit messages)
 - **DB Migrations**: Drizzle Kit generate + migrate
 
 ## Language
