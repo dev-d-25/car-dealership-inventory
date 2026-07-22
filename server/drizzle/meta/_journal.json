@@ -15,6 +15,13 @@
       "when": 1784730966662,
       "tag": "0001_nasty_kabuki",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1784720183711,
+      "tag": "0002_same_dazzler",
+      "breakpoints": true
     }
   ]
 }
