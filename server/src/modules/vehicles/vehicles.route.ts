@@ -1,8 +1,5 @@
 import { Router, type Router as RouterType } from "express";
-import {
-  authenticate,
-  requireAdmin,
-} from "../../common/middleware/auth.middleware.js";
+import { authenticate, requirePermission } from "../../common/middleware/auth.middleware.js";
 import { asyncHandler } from "../../common/middleware/error-handler.js";
 import {
   validateBody,
@@ -34,30 +31,33 @@ router.get(
 router.post(
   "/",
   authenticate,
+  requirePermission("vehicle", "create"),
   validateBody(createVehicleSchema),
   asyncHandler(controller.createVehicle),
 );
 router.put(
   "/:id",
   authenticate,
+  requirePermission("vehicle", "update"),
   validateBody(updateVehicleSchema),
   asyncHandler(controller.updateVehicle),
 );
 router.delete(
   "/:id",
   authenticate,
-  requireAdmin,
+  requirePermission("vehicle", "delete"),
   asyncHandler(controller.deleteVehicle),
 );
 router.post(
   "/:id/purchase",
   authenticate,
+  requirePermission("vehicle", "purchase"),
   asyncHandler(controller.purchaseVehicle),
 );
 router.post(
   "/:id/restock",
   authenticate,
-  requireAdmin,
+  requirePermission("vehicle", "restock"),
   validateBody(restockVehicleSchema),
   asyncHandler(controller.restockVehicle),
 );
