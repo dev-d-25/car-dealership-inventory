@@ -68,6 +68,48 @@ describe("vehicles.service", () => {
     expect(page2.data).toHaveLength(1);
   });
 
+  it("searchVehicles combines multiple filters with AND logic", async () => {
+    await createVehicle({
+      maker: "Toyota",
+      model: "Camry",
+      category: "Sedan",
+      price: 25000,
+      quantity: 1,
+    });
+    await createVehicle({
+      maker: "Toyota",
+      model: "RAV4",
+      category: "SUV",
+      price: 32000,
+      quantity: 1,
+    });
+    await createVehicle({
+      maker: "Honda",
+      model: "Civic",
+      category: "Sedan",
+      price: 22000,
+      quantity: 1,
+    });
+
+    const result = await searchVehicles({
+      maker: "Toyota",
+      category: "Sedan",
+      page: 1,
+      limit: 10,
+    });
+    expect(result.total).toBe(1);
+    expect(result.data[0]?.model).toBe("Camry");
+
+    const noMatch = await searchVehicles({
+      maker: "Toyota",
+      category: "Truck",
+      page: 1,
+      limit: 10,
+    });
+    expect(noMatch.total).toBe(0);
+    expect(noMatch.data).toHaveLength(0);
+  });
+
   it("searchVehicles filters by maker, category, and price range", async () => {
     await createVehicle({
       maker: "Toyota",
