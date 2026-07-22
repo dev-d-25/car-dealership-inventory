@@ -12,6 +12,10 @@ const mockSession = {
     emailVerified: false,
     createdAt: new Date(),
     updatedAt: new Date(),
+    role: "user",
+    banned: false,
+    banReason: null,
+    banExpires: null,
   },
   session: {
     id: "session-1",
@@ -20,6 +24,7 @@ const mockSession = {
     expiresAt: new Date(Date.now() + 60_000),
     createdAt: new Date(),
     updatedAt: new Date(),
+    impersonatedBy: null,
   },
 };
 
