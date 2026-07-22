@@ -81,7 +81,12 @@ export async function listVehicles(options: {
   const { page, limit } = options;
   const offset = getOffset(page, limit);
 
-  const data = await db.select().from(vehicle).limit(limit).offset(offset);
+  const data = await db
+    .select()
+    .from(vehicle)
+    .orderBy(desc(vehicle.createdAt))
+    .limit(limit)
+    .offset(offset);
   const [{ total }] = await db.select({ total: count() }).from(vehicle);
 
   return { data, total };

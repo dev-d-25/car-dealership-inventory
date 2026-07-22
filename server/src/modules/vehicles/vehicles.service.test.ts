@@ -68,6 +68,35 @@ describe("vehicles.service", () => {
     expect(page2.data).toHaveLength(1);
   });
 
+  it("listVehicles returns vehicles sorted by createdAt descending", async () => {
+    const first = await createVehicle({
+      maker: "Toyota",
+      model: "Camry",
+      category: "Sedan",
+      price: 25000,
+      quantity: 1,
+    });
+    const second = await createVehicle({
+      maker: "Honda",
+      model: "Civic",
+      category: "Sedan",
+      price: 22000,
+      quantity: 1,
+    });
+    const third = await createVehicle({
+      maker: "Ford",
+      model: "F-150",
+      category: "Truck",
+      price: 40000,
+      quantity: 1,
+    });
+
+    const { data } = await listVehicles({ page: 1, limit: 10 });
+    expect(data[0]?.id).toBe(third.id);
+    expect(data[1]?.id).toBe(second.id);
+    expect(data[2]?.id).toBe(first.id);
+  });
+
   it("searchVehicles combines multiple filters with AND logic", async () => {
     await createVehicle({
       maker: "Toyota",
