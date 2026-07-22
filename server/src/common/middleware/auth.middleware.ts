@@ -3,12 +3,10 @@ import { fromNodeHeaders } from "better-auth/node";
 import { auth } from "../../lib/auth.js";
 import { ApiError } from "../utils/api-error.js";
 
-declare global {
-  namespace Express {
-    interface Request {
-      user?: typeof auth.$Infer.Session.user;
-      session?: typeof auth.$Infer.Session.session;
-    }
+declare module 'express' {
+  interface Request {
+    user?: typeof auth.$Infer.Session.user;
+    session?: typeof auth.$Infer.Session.session;
   }
 }
 
