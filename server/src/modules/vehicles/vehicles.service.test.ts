@@ -110,6 +110,81 @@ describe("vehicles.service", () => {
     expect(noMatch.data).toHaveLength(0);
   });
 
+  it("searchVehicles uses partial matching for maker and model", async () => {
+    await createVehicle({
+      maker: "Toyota",
+      model: "Camry",
+      category: "Sedan",
+      price: 25000,
+      quantity: 1,
+    });
+    await createVehicle({
+      maker: "Honda",
+      model: "Civic",
+      category: "Sedan",
+      price: 22000,
+      quantity: 1,
+    });
+
+    const partialMaker = await searchVehicles({
+      maker: "Toy",
+      page: 1,
+      limit: 10,
+    });
+    expect(partialMaker.total).toBe(1);
+    expect(partialMaker.data[0]?.maker).toBe("Toyota");
+
+    const partialModel = await searchVehicles({
+      model: "Cam",
+      page: 1,
+      limit: 10,
+    });
+    expect(partialModel.total).toBe(1);
+    expect(partialModel.data[0]?.model).toBe("Camry");
+  });
+
+  it("searchVehicles sorts by price ascending and descending", async () => {
+    await createVehicle({
+      maker: "Toyota",
+      model: "Camry",
+      category: "Sedan",
+      price: 25000,
+      quantity: 1,
+    });
+    await createVehicle({
+      maker: "Honda",
+      model: "Civic",
+      category: "Sedan",
+      price: 22000,
+      quantity: 1,
+    });
+    await createVehicle({
+      maker: "Ford",
+      model: "F-150",
+      category: "Truck",
+      price: 40000,
+      quantity: 1,
+    });
+
+    const asc = await searchVehicles({
+      sortBy: "price",
+      sortOrder: "asc",
+      page: 1,
+      limit: 10,
+    });
+    expect(asc.data[0]?.model).toBe("Civic");
+    expect(asc.data[2]?.model).toBe("F-150");
+
+    const desc = await searchVehicles({
+      sortBy: "price",
+      sortOrder: "desc",
+      page: 1,
+      limit: 10,
+    });
+    expect(desc.data[0]?.model).toBe("F-150");
+    expect(desc.data[2]?.model).toBe("Civic");
+  });
+
   it("searchVehicles filters by maker, category, and price range", async () => {
     await createVehicle({
       maker: "Toyota",
