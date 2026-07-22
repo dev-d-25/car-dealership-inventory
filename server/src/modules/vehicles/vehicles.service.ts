@@ -10,25 +10,15 @@ import type {
 export type Vehicle = typeof vehicle.$inferSelect;
 
 function buildSearchConditions(filters: SearchVehicleInput): SQL[] {
-  const conditions: SQL[] = [];
-
-  if (filters.maker) {
-    conditions.push(ilike(vehicle.maker, filters.maker));
-  }
-  if (filters.model) {
-    conditions.push(ilike(vehicle.model, filters.model));
-  }
-  if (filters.category) {
-    conditions.push(eq(vehicle.category, filters.category));
-  }
-  if (filters.minPrice !== undefined) {
-    conditions.push(gte(vehicle.price, filters.minPrice.toString()));
-  }
-  if (filters.maxPrice !== undefined) {
-    conditions.push(lte(vehicle.price, filters.maxPrice.toString()));
-  }
-
-  return conditions;
+  return [
+    filters.maker && ilike(vehicle.maker, filters.maker),
+    filters.model && ilike(vehicle.model, filters.model),
+    filters.category && eq(vehicle.category, filters.category),
+    filters.minPrice !== undefined &&
+      gte(vehicle.price, filters.minPrice.toString()),
+    filters.maxPrice !== undefined &&
+      lte(vehicle.price, filters.maxPrice.toString()),
+  ].filter((c): c is SQL => Boolean(c));
 }
 
 export async function createVehicle(
