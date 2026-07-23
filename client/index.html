@@ -4,7 +4,29 @@
     <meta charset="UTF-8" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>client</title>
+    <title>kata - Premium Car Dealership Inventory</title>
+    <meta name="description" content="kata is a premium car dealership inventory system. Browse our extensive collection of new and used vehicles from top manufacturers." />
+    <meta name="keywords" content="car dealership, vehicles, inventory, cars, trucks, SUVs, new cars, used cars" />
+    <meta name="author" content="kata" />
+    <meta property="og:title" content="kata - Premium Car Dealership Inventory" />
+    <meta property="og:description" content="Browse our extensive collection of new and used vehicles from top manufacturers." />
+    <meta property="og:type" content="website" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="kata - Premium Car Dealership Inventory" />
+    <meta name="twitter:description" content="Browse our extensive collection of new and used vehicles from top manufacturers." />
+    <script>
+      ;(function () {
+        try {
+          var theme = localStorage.getItem('vite-ui-theme') || 'system';
+          if (theme === 'system') {
+            var isDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+            document.documentElement.classList.add(isDark ? 'dark' : 'light');
+          } else {
+            document.documentElement.classList.add(theme);
+          }
+        } catch (e) {}
+      })();
+    </script>
   </head>
   <body>
     <div id="root"></div>
