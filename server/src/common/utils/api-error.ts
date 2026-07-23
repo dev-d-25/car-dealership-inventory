@@ -69,6 +69,14 @@ export class ApiError extends Error {
     return this.oauth(401, "invalid_token", error_description);
   }
 
+  static outOfStock(vehicleId: string): ApiError {
+    return new ApiError(409, "OUT_OF_STOCK", `Out of stock: ${vehicleId}`);
+  }
+
+  static vehicleNotFound(id: string): ApiError {
+    return new ApiError(404, "VEHICLE_NOT_FOUND", `Vehicle not found: ${id}`);
+  }
+
   send(res: Response): Response {
     return res.status(this.statusCode).json({
       success: false,
