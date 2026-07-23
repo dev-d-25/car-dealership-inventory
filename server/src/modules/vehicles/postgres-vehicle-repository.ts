@@ -183,4 +183,8 @@ export class PostgresVehicleRepository implements VehicleRepository {
   async delete(id: string): Promise<void> {
     await this.db.delete(vehicle).where(eq(vehicle.id, id));
   }
+
+  async transaction<T>(fn: () => Promise<T>): Promise<T> {
+    return this.db.transaction(fn);
+  }
 }

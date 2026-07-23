@@ -22,4 +22,5 @@ export interface VehicleRepository {
   atomicDecrement(id: string): Promise<Vehicle | null>;
   atomicIncrement(id: string, amount: number): Promise<Vehicle | null>;
   delete(id: string): Promise<void>;
+  transaction<T>(fn: () => Promise<T>): Promise<T>;
 }

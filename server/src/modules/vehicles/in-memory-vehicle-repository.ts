@@ -148,4 +148,8 @@ export class InMemoryVehicleRepository implements VehicleRepository {
   async delete(id: string): Promise<void> {
     this.vehicles = this.vehicles.filter((v) => v.id !== id);
   }
+
+  async transaction<T>(fn: () => Promise<T>): Promise<T> {
+    return fn();
+  }
 }

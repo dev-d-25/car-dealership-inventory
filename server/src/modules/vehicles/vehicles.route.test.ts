@@ -4,6 +4,7 @@ import { app } from "../../app.js";
 import { auth } from "../../lib/auth.js";
 import { db } from "../../db/index.js";
 import { vehicle } from "../../db/schema.js";
+import { user } from "../../db/auth-schema.js";
 
 const adminSession = {
   user: {
@@ -97,9 +98,24 @@ async function seedVehicle(data: {
   return row;
 }
 
+async function seedUser(data: { id: string; role?: string }) {
+  await db
+    .insert(user)
+    .values({
+      id: data.id,
+      name: data.id,
+      email: `${data.id}@example.com`,
+      emailVerified: false,
+      role: data.role ?? "user",
+    })
+    .onConflictDoNothing();
+}
+
 beforeEach(async () => {
   vi.restoreAllMocks();
   await db.delete(vehicle);
+  await seedUser({ id: "admin-1", role: "admin" });
+  await seedUser({ id: "user-1", role: "user" });
 });
 
 describe("vehicles routes", () => {

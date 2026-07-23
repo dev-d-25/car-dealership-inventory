@@ -7,7 +7,17 @@ import type {
 import type { Vehicle, VehicleRepository } from "./vehicle-repository.js";
 
 export class VehicleService {
-  constructor(private repo: VehicleRepository) {}
+  constructor(
+    private repo: VehicleRepository,
+    private purchaseRepo?: {
+      create(input: {
+        vehicleId: string;
+        userId: string;
+        quantity: number;
+        unitPrice: number;
+      }): Promise<unknown>;
+    },
+  ) {}
 
   async createVehicle(input: CreateVehicleInput): Promise<Vehicle> {
     return this.repo.create(input);
@@ -37,20 +47,31 @@ export class VehicleService {
     return this.repo.update(id, input);
   }
 
-  async purchaseVehicle(id: string): Promise<Vehicle> {
-    const found = await this.repo.findById(id);
+  async purchaseVehicle(id: string, userId: string): Promise<Vehicle> {
+    return this.repo.transaction(async () => {
+      const found = await this.repo.findById(id);
 
-    if (!found) {
-      throw ApiError.vehicleNotFound(id);
-    }
+      if (!found) {
+        throw ApiError.vehicleNotFound(id);
+      }
 
-    if (found.quantity <= 0) {
-      throw ApiError.outOfStock(id);
-    }
+      if (found.quantity <= 0) {
+        throw ApiError.outOfStock(id);
+      }
 
-    const updated = await this.repo.atomicDecrement(id);
+      const updated = await this.repo.atomicDecrement(id);
 
-    return updated!;
+      if (this.purchaseRepo) {
+        await this.purchaseRepo.create({
+          vehicleId: id,
+          userId,
+          quantity: 1,
+          unitPrice: found.price,
+        });
+      }
+
+      return updated!;
+    });
   }
 
   async restockVehicle(id: string, amount: number): Promise<Vehicle> {

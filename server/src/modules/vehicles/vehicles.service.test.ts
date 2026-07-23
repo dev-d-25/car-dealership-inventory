@@ -295,7 +295,7 @@ describe("vehicles.service", () => {
       quantity: 3,
     });
 
-    const purchased = await service.purchaseVehicle(created.id);
+    const purchased = await service.purchaseVehicle(created.id, "test-user-id");
 
     expect(purchased).not.toBeNull();
     expect(purchased!.quantity).toBe(2);
@@ -313,13 +313,13 @@ describe("vehicles.service", () => {
       quantity: 0,
     });
 
-    await expect(service.purchaseVehicle(created.id)).rejects.toThrow(
+    await expect(service.purchaseVehicle(created.id, "test-user-id")).rejects.toThrow(
       ApiError,
     );
   });
 
   it("purchaseVehicle throws VehicleNotFoundError for missing vehicle", async () => {
-    await expect(service.purchaseVehicle("nonexistent")).rejects.toThrow(
+    await expect(service.purchaseVehicle("nonexistent", "test-user-id")).rejects.toThrow(
       ApiError,
     );
   });

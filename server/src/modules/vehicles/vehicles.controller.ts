@@ -85,6 +85,7 @@ export function createVehicleController(service: VehicleService) {
     async purchaseVehicle(req: Request, res: Response) {
       const purchased = await service.purchaseVehicle(
         getRouteParam(req.params.id),
+        req.user!.id,
       );
       return ApiResponse.success(res, purchased);
     },

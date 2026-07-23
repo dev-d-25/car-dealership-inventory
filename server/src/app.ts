@@ -5,6 +5,7 @@ import { authenticate } from "./common/middleware/auth.middleware.js";
 import { errorHandler } from "./common/middleware/error-handler.js";
 import { auth } from "./lib/auth.js";
 import { vehiclesRoutes } from "./modules/vehicles/index.js";
+import { purchasesRoutes } from "./modules/purchases/index.js";
 
 type AuthenticatedRequest = Request & {
   user: typeof auth.$Infer.Session.user;
@@ -33,6 +34,7 @@ app.get("/api/v1/auth/me", authenticate, (req, res) => {
 app.all("/api/v1/auth/{*any}", toNodeHandler(auth));
 
 app.use("/api/v1/vehicles", vehiclesRoutes);
+app.use("/api/v1/purchases", purchasesRoutes);
 
 app.use(errorHandler);
 
