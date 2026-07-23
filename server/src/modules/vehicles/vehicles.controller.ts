@@ -1,4 +1,5 @@
 import type { Request, Response } from "express";
+import type { ValidatedRequest } from "../../common/middleware/validate.middleware.js";
 import { ApiError } from "../../common/utils/api-error.js";
 import { ApiResponse } from "../../common/utils/api-response.js";
 import type {
@@ -23,16 +24,20 @@ function getRouteParam(value: string | string[]): string {
   return Array.isArray(value) ? value[0] : value;
 }
 
+function getValidated<T>(req: Request): T {
+  return (req as ValidatedRequest<T>).validated;
+}
+
 export function createVehicleController(service: VehicleService) {
   return {
     async createVehicle(req: Request, res: Response) {
-      const input = req.validated as CreateVehicleInput;
+      const input = getValidated<CreateVehicleInput>(req);
       const vehicle = await service.createVehicle(input);
       return ApiResponse.created(res, vehicle);
     },
 
     async listVehicles(req: Request, res: Response) {
-      const { page, limit } = req.validated as ListVehicleInput;
+      const { page, limit } = getValidated<ListVehicleInput>(req);
       const result = await service.listVehicles({ page, limit });
       return ApiResponse.paginated(
         res,
@@ -42,7 +47,7 @@ export function createVehicleController(service: VehicleService) {
     },
 
     async searchVehicles(req: Request, res: Response) {
-      const filters = req.validated as SearchVehicleInput;
+      const filters = getValidated<SearchVehicleInput>(req);
       const result = await service.searchVehicles(filters);
       return ApiResponse.paginated(
         res,
@@ -52,7 +57,7 @@ export function createVehicleController(service: VehicleService) {
     },
 
     async updateVehicle(req: Request, res: Response) {
-      const input = req.validated as UpdateVehicleInput;
+      const input = getValidated<UpdateVehicleInput>(req);
       const updated = await service.updateVehicle(
         getRouteParam(req.params.id),
         input,
@@ -85,7 +90,7 @@ export function createVehicleController(service: VehicleService) {
     },
 
     async restockVehicle(req: Request, res: Response) {
-      const { amount } = req.validated as RestockVehicleInput;
+      const { amount } = getValidated<RestockVehicleInput>(req);
       const restocked = await service.restockVehicle(
         getRouteParam(req.params.id),
         amount,
