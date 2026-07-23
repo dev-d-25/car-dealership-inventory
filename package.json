@@ -1,0 +1,14 @@
+{
+  "name": "kata",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "dev": "pnpm --filter client dev & pnpm --filter server dev",
+    "build": "pnpm --filter client build && pnpm --filter server build",
+    "test": "pnpm --filter server test"
+  },
+  "devDependencies": {
+    "typescript": "~6.0.2"
+  },
+  "packageManager": "pnpm@9.15.9"
+}

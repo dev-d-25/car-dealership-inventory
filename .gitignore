@@ -7,10 +7,8 @@ dist/
 build/
 
 # Environment
-.env
-.env.local
-.env.prod
-.env.production
+.env*
+!.env.production
 
 # IDE
 .vscode/
@@ -42,3 +40,4 @@ src/routeTree.gen.ts
 .skills/
 code-review-report.html
 plans/
+.vercel

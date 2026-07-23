@@ -6,6 +6,7 @@ import { errorHandler } from "./common/middleware/error-handler.js";
 import { auth } from "./lib/auth.js";
 import { vehiclesRoutes } from "./modules/vehicles/index.js";
 import { purchasesRoutes } from "./modules/purchases/index.js";
+import { env } from "./env.js";
 
 type AuthenticatedRequest = Request & {
   user: typeof auth.$Infer.Session.user;
@@ -13,9 +14,20 @@ type AuthenticatedRequest = Request & {
 
 const app: Express = express();
 
+const allowedOrigins =
+  env.NODE_ENV === "production"
+    ? [env.BETTER_AUTH_URL]
+    : ["http://localhost:5173", "http://localhost:3000"];
+
 app.use(
   cors({
-    origin: "http://localhost:5173",
+    origin: (origin, callback) => {
+      if (!origin || allowedOrigins.includes(origin)) {
+        callback(null, true);
+      } else {
+        callback(new Error("Not allowed by CORS"));
+      }
+    },
     credentials: true,
   }),
 );
@@ -38,4 +50,4 @@ app.use("/api/v1/purchases", purchasesRoutes);
 
 app.use(errorHandler);
 
-export { app };
+export default app;

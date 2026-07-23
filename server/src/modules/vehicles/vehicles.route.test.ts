@@ -1,6 +1,6 @@
 import request from "supertest";
 import { describe, expect, it, vi, beforeEach } from "vitest";
-import { app } from "../../app.js";
+import app from "../../app.js";
 import { auth } from "../../lib/auth.js";
 import { db } from "../../db/index.js";
 import { vehicle } from "../../db/schema.js";
