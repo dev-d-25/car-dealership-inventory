@@ -12,54 +12,56 @@ import {
   searchVehicleSchema,
   updateVehicleSchema,
 } from "./vehicles.dto.js";
-import * as controller from "./vehicles.controller.js";
+import type { VehicleController } from "./vehicles.controller.js";
 
-const router: RouterType = Router();
+export function createVehicleRoutes(controller: VehicleController): RouterType {
+  const router: RouterType = Router();
 
-router.get(
-  "/search",
-  authenticate,
-  validateQuery(searchVehicleSchema),
-  asyncHandler(controller.searchVehicles),
-);
-router.get(
-  "/",
-  authenticate,
-  validateQuery(listVehicleSchema),
-  asyncHandler(controller.listVehicles),
-);
-router.post(
-  "/",
-  authenticate,
-  requirePermission("vehicle", "create"),
-  validateBody(createVehicleSchema),
-  asyncHandler(controller.createVehicle),
-);
-router.put(
-  "/:id",
-  authenticate,
-  requirePermission("vehicle", "update"),
-  validateBody(updateVehicleSchema),
-  asyncHandler(controller.updateVehicle),
-);
-router.delete(
-  "/:id",
-  authenticate,
-  requirePermission("vehicle", "delete"),
-  asyncHandler(controller.deleteVehicle),
-);
-router.post(
-  "/:id/purchase",
-  authenticate,
-  requirePermission("vehicle", "purchase"),
-  asyncHandler(controller.purchaseVehicle),
-);
-router.post(
-  "/:id/restock",
-  authenticate,
-  requirePermission("vehicle", "restock"),
-  validateBody(restockVehicleSchema),
-  asyncHandler(controller.restockVehicle),
-);
+  router.get(
+    "/search",
+    authenticate,
+    validateQuery(searchVehicleSchema),
+    asyncHandler(controller.searchVehicles),
+  );
+  router.get(
+    "/",
+    authenticate,
+    validateQuery(listVehicleSchema),
+    asyncHandler(controller.listVehicles),
+  );
+  router.post(
+    "/",
+    authenticate,
+    requirePermission("vehicle", "create"),
+    validateBody(createVehicleSchema),
+    asyncHandler(controller.createVehicle),
+  );
+  router.put(
+    "/:id",
+    authenticate,
+    requirePermission("vehicle", "update"),
+    validateBody(updateVehicleSchema),
+    asyncHandler(controller.updateVehicle),
+  );
+  router.delete(
+    "/:id",
+    authenticate,
+    requirePermission("vehicle", "delete"),
+    asyncHandler(controller.deleteVehicle),
+  );
+  router.post(
+    "/:id/purchase",
+    authenticate,
+    requirePermission("vehicle", "purchase"),
+    asyncHandler(controller.purchaseVehicle),
+  );
+  router.post(
+    "/:id/restock",
+    authenticate,
+    requirePermission("vehicle", "restock"),
+    validateBody(restockVehicleSchema),
+    asyncHandler(controller.restockVehicle),
+  );
 
-export default router;
+  return router;
+}
