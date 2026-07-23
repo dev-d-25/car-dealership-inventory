@@ -1,10 +1,14 @@
-import express, { type Express } from "express";
+import express, { type Express, type Request } from "express";
 import cors from "cors";
 import { toNodeHandler } from "better-auth/node";
 import { authenticate } from "./common/middleware/auth.middleware.js";
 import { errorHandler } from "./common/middleware/error-handler.js";
 import { auth } from "./lib/auth.js";
 import { vehiclesRoutes } from "./modules/vehicles/index.js";
+
+type AuthenticatedRequest = Request & {
+  user: typeof auth.$Infer.Session.user;
+};
 
 const app: Express = express();
 
@@ -22,7 +26,8 @@ app.get("/api/v1/health", (_req, res) => {
 });
 
 app.get("/api/v1/auth/me", authenticate, (req, res) => {
-  return res.json({ success: true, data: { user: req.user } });
+  const { user } = req as AuthenticatedRequest;
+  return res.json({ success: true, data: { user } });
 });
 
 app.all("/api/v1/auth/{*any}", toNodeHandler(auth));
