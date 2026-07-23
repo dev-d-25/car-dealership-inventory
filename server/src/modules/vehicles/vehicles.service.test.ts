@@ -25,7 +25,7 @@ describe("vehicles.service", () => {
     expect(created.maker).toBe("Toyota");
     expect(created.model).toBe("Camry");
     expect(created.category).toBe("Sedan");
-    expect(Number(created.price)).toBe(25000);
+    expect(created.price).toBe(25000);
     expect(created.quantity).toBe(3);
     expect(created.description).toBe("Reliable sedan");
 
@@ -278,11 +278,11 @@ describe("vehicles.service", () => {
     });
 
     expect(updated).not.toBeNull();
-    expect(Number(updated!.price)).toBe(27000);
+    expect(updated!.price).toBe(27000);
     expect(updated!.quantity).toBe(5);
 
     const found = await service.getVehicleById(created.id);
-    expect(Number(found!.price)).toBe(27000);
+    expect(found!.price).toBe(27000);
     expect(found!.quantity).toBe(5);
   });
 

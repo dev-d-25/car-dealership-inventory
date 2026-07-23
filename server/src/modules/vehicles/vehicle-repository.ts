@@ -5,7 +5,7 @@ export type Vehicle = {
   maker: string;
   model: string;
   category: string;
-  price: string;
+  price: number;
   quantity: number;
   description: string | null;
   imageUrl: string | null;

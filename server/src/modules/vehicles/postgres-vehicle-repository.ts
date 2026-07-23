@@ -20,6 +20,11 @@ import type {
 import type { Vehicle, VehicleRepository } from "./vehicle-repository.js";
 
 type DrizzleDb = typeof db;
+type VehicleRow = typeof vehicle.$inferSelect;
+
+function mapRow(row: VehicleRow): Vehicle {
+  return { ...row, price: Number(row.price) };
+}
 
 function buildSearchConditions(filters: SearchVehicleInput): SQL[] {
   const conditions: SQL[] = [];
@@ -60,7 +65,7 @@ export class PostgresVehicleRepository implements VehicleRepository {
       })
       .returning();
 
-    return created;
+    return mapRow(created);
   }
 
   async findById(id: string): Promise<Vehicle | null> {
@@ -70,7 +75,7 @@ export class PostgresVehicleRepository implements VehicleRepository {
       .where(eq(vehicle.id, id))
       .limit(1);
 
-    return found ?? null;
+    return found ? mapRow(found) : null;
   }
 
   async list(options: {
@@ -80,7 +85,7 @@ export class PostgresVehicleRepository implements VehicleRepository {
     const { page, limit } = options;
     const offset = (page - 1) * limit;
 
-    const data = await this.db
+    const rows = await this.db
       .select()
       .from(vehicle)
       .orderBy(desc(vehicle.createdAt))
@@ -90,7 +95,7 @@ export class PostgresVehicleRepository implements VehicleRepository {
       .select({ total: count() })
       .from(vehicle);
 
-    return { data, total };
+    return { data: rows.map(mapRow), total };
   }
 
   async search(
@@ -109,7 +114,7 @@ export class PostgresVehicleRepository implements VehicleRepository {
           ? vehicle.updatedAt
           : vehicle.createdAt;
 
-    const data = await this.db
+    const rows = await this.db
       .select()
       .from(vehicle)
       .where(where)
@@ -122,7 +127,7 @@ export class PostgresVehicleRepository implements VehicleRepository {
       .from(vehicle)
       .where(where);
 
-    return { data, total };
+    return { data: rows.map(mapRow), total };
   }
 
   async update(
@@ -150,7 +155,7 @@ export class PostgresVehicleRepository implements VehicleRepository {
       .where(eq(vehicle.id, id))
       .returning();
 
-    return updated ?? null;
+    return updated ? mapRow(updated) : null;
   }
 
   async atomicDecrement(id: string): Promise<Vehicle | null> {
@@ -162,7 +167,7 @@ export class PostgresVehicleRepository implements VehicleRepository {
       .where(eq(vehicle.id, id))
       .returning();
 
-    return updated ?? null;
+    return updated ? mapRow(updated) : null;
   }
 
   async atomicIncrement(id: string, amount: number): Promise<Vehicle | null> {
@@ -174,7 +179,7 @@ export class PostgresVehicleRepository implements VehicleRepository {
       .where(eq(vehicle.id, id))
       .returning();
 
-    return updated ?? null;
+    return updated ? mapRow(updated) : null;
   }
 
   async delete(id: string): Promise<void> {

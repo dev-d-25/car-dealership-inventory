@@ -24,7 +24,7 @@ export class InMemoryVehicleRepository implements VehicleRepository {
       maker: input.maker,
       model: input.model,
       category: input.category,
-      price: input.price.toString(),
+      price: input.price,
       quantity: input.quantity ?? 0,
       description: input.description ?? null,
       imageUrl: input.imageUrl ?? null,
@@ -104,7 +104,7 @@ export class InMemoryVehicleRepository implements VehicleRepository {
       ...(input.maker !== undefined && { maker: input.maker }),
       ...(input.model !== undefined && { model: input.model }),
       ...(input.category !== undefined && { category: input.category }),
-      ...(input.price !== undefined && { price: input.price.toString() }),
+      ...(input.price !== undefined && { price: input.price }),
       ...(input.quantity !== undefined && { quantity: input.quantity }),
       ...(input.description !== undefined && {
         description: input.description,
