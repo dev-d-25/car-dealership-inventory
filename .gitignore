@@ -34,3 +34,4 @@ coverage/
 *.db
 *.db-shm
 *.db-wal
+CODEBASE-DESIGN-REVIEW.html
