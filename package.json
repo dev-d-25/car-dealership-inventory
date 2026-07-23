@@ -2,6 +2,7 @@
   "name": "kata",
   "version": "1.0.0",
   "private": true,
+  "packages": ["client", "server"],
   "scripts": {
     "dev": "pnpm --filter client dev & pnpm --filter server dev",
     "build": "pnpm --filter client build && pnpm --filter server build",
