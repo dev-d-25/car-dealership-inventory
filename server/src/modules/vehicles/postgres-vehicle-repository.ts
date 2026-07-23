@@ -107,12 +107,10 @@ export class PostgresVehicleRepository implements VehicleRepository {
     const where = conditions.length > 0 ? and(...conditions) : undefined;
 
     const orderFn = sortOrder === "desc" ? desc : asc;
-    const orderColumn =
-      sortBy === "price"
-        ? vehicle.price
-        : sortBy === "updatedAt"
-          ? vehicle.updatedAt
-          : vehicle.createdAt;
+    const sortColumns = { price: vehicle.price, updatedAt: vehicle.updatedAt };
+    const orderColumn = sortBy && sortBy in sortColumns
+      ? sortColumns[sortBy as keyof typeof sortColumns]
+      : vehicle.createdAt;
 
     const rows = await this.db
       .select()
