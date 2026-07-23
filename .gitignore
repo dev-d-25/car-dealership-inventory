@@ -35,3 +35,10 @@ coverage/
 *.db-shm
 *.db-wal
 CODEBASE-DESIGN-REVIEW.html
+src/routeTree.gen.ts
+
+# Skills
+.agents/
+.skills/
+code-review-report.html
+plans/
