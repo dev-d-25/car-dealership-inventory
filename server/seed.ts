@@ -3,7 +3,7 @@ import { Pool } from "pg";
 import { drizzle } from "drizzle-orm/node-postgres";
 import { vehicle } from "./src/db/schema.js";
 
-dotenv.config({ path: "../.env.local" });
+dotenv.config({ path: "../.env" });
 
 const pool = new Pool({ connectionString: process.env.DATABASE_URL });
 const db = drizzle(pool);
