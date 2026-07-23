@@ -8,6 +8,7 @@ import { ac, superadmin, admin as adminRole, moderator, user } from "./permissio
 export const auth = betterAuth({
   baseURL: env.BETTER_AUTH_URL,
   basePath: "/api/v1/auth",
+  trustedOrigins: ["http://localhost:5173"],
   database: drizzleAdapter(db, { provider: "pg" }),
   emailAndPassword: {
     enabled: true,
