@@ -1,19 +1,12 @@
 import { z } from "zod";
+import { vehicleCategories } from "../../db/schema.js";
 
-export const vehicleCategoryEnum = [
-  "Hatchback",
-  "Sedan",
-  "SUV",
-  "Truck",
-  "Coupe",
-] as const;
-
-export type VehicleCategory = (typeof vehicleCategoryEnum)[number];
+export type VehicleCategory = (typeof vehicleCategories)[number];
 
 export const createVehicleSchema = z.object({
   maker: z.string().min(1, "Maker is required"),
   model: z.string().min(1, "Model is required"),
-  category: z.enum(vehicleCategoryEnum, {
+  category: z.enum(vehicleCategories, {
     error: "Invalid category",
   }),
   price: z.coerce.number().positive("Price must be greater than 0"),
@@ -36,7 +29,7 @@ export const listVehicleSchema = z.object({
 export const searchVehicleSchema = z.object({
   maker: z.string().optional(),
   model: z.string().optional(),
-  category: z.enum(vehicleCategoryEnum).optional(),
+  category: z.enum(vehicleCategories).optional(),
   minPrice: z.coerce.number().min(0).optional(),
   maxPrice: z.coerce.number().min(0).optional(),
   sortBy: z.enum(["price", "createdAt", "updatedAt"]).optional(),

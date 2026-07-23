@@ -7,6 +7,16 @@ import {
   uuid,
 } from "drizzle-orm/pg-core";
 
+export const vehicleCategories = [
+  "Hatchback",
+  "Sedan",
+  "SUV",
+  "Truck",
+  "Coupe",
+] as const;
+
+export type VehicleCategory = (typeof vehicleCategories)[number];
+
 export const vehicle = pgTable("vehicle", {
   id: uuid("id").primaryKey().defaultRandom(),
   maker: text("maker").notNull(),
