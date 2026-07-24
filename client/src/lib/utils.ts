@@ -8,12 +8,15 @@ export function cn(...inputs: ClassValue[]) {
 
 export function extractErrorMessage(err: unknown): string {
   if (err instanceof AxiosError) {
-    return (
-      err.response?.data?.message ||
-      err.response?.data?.error ||
-      err.message ||
-      "Something went wrong"
-    )
+    const data = err.response?.data
+    const error = data?.error
+    const errorMsg =
+      typeof error === "object" && error !== null
+        ? error.message
+        : typeof error === "string"
+          ? error
+          : undefined
+    return data?.message || errorMsg || err.message || "Something went wrong"
   }
   if (err instanceof Error) {
     return err.message
