@@ -2,7 +2,7 @@
   "name": "kata",
   "version": "1.0.0",
   "private": true,
-  "packages": ["client", "server"],
+  "workspaces": ["client", "server"],
   "scripts": {
     "dev": "pnpm --filter client dev & pnpm --filter server dev",
     "build": "pnpm --filter client build && pnpm --filter server build",
@@ -11,5 +11,5 @@
   "devDependencies": {
     "typescript": "~6.0.2"
   },
-  "packageManager": "pnpm@9.15.9"
+  "packageManager": "pnpm@10.34.5"
 }
