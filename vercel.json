@@ -1,17 +1,23 @@
 {
   "version": 2,
   "installCommand": "corepack enable && pnpm install",
-  "buildCommand": "pnpm --filter client build",
-  "outputDirectory": "client/dist",
-  "framework": null,
-  "functions": {
-    "server/src/app.ts": {
-      "includeFiles": "server/**"
+  "builds": [
+    {
+      "src": "client/package.json",
+      "use": "@vercel/static-build",
+      "config": { "distDir": "dist" }
+    },
+    {
+      "src": "server/src/app.ts",
+      "use": "@vercel/node",
+      "config": {
+        "includeFiles": ["server/src/**", "server/drizzle/**"]
+      }
     }
-  },
+  ],
   "rewrites": [
     {
-      "source": "/api/:path*",
+      "source": "/api/(.*)",
       "destination": "/server/src/app.ts"
     }
   ]
